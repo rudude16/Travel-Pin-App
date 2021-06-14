@@ -20,7 +20,7 @@ const PopupCard = ({ pin }) => {
             Place
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">
-            {pin.title}
+            {pin.place}
           </Typography>
           <Typography
             gutterBottom
@@ -31,7 +31,7 @@ const PopupCard = ({ pin }) => {
             Review
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">
-            {pin.description}
+            {pin.review}
           </Typography>
           <Typography
             gutterBottom
