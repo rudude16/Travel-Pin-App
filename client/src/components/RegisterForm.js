@@ -37,8 +37,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function RegisterForm({
-  setCurrentUser,
+  setToken,
   setToggleRegister,
+  setToggleLogin,
   storage,
 }) {
   const classes = useStyles();
@@ -59,8 +60,9 @@ export default function RegisterForm({
         `${process.env.REACT_APP_BACKEND}/api/user/signup`,
         details
       );
-      storage.setItem("userName", user.userName);
-      setCurrentUser(user.userName);
+      storage.setItem("userName", user.data.userName);
+      storage.setItem("token", user.data.token);
+      setToken(user.data.token);
       setToggleRegister(false);
     } catch (e) {
       alert("Something went wrong!");
@@ -140,7 +142,14 @@ export default function RegisterForm({
           </Button>
           <Grid container justify="center">
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link
+                href="#"
+                variant="body2"
+                onClick={() => {
+                  setToggleRegister(false);
+                  setToggleLogin(true);
+                }}
+              >
                 Already have an account? Sign in
               </Link>
             </Grid>

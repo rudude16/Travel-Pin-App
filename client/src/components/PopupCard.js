@@ -56,7 +56,7 @@ const PopupCard = ({ pin }) => {
             Information
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">
-            Created by <b>{pin.userName}</b>
+            Created by {pin.userName}
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">
             {format(pin.createdAt)}

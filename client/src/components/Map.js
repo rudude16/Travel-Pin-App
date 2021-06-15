@@ -13,9 +13,7 @@ require("../app.css");
 
 function Map() {
   const storage = window.localStorage;
-  const [currentuserName, setCurrentUser] = useState(
-    storage.getItem("userName")
-  );
+  const [token, setToken] = useState(storage.getItem("token"));
   const [toggleRegister, setToggleRegister] = useState(false);
   const [toggleLogin, setToggleLogin] = useState(false);
   const [currentPinId, setPinId] = React.useState(null);
@@ -23,8 +21,8 @@ function Map() {
   const [pins, setPins] = React.useState([]);
 
   const [viewport, setViewport] = useState({
-    latitude: 37.7577,
-    longitude: -122.4376,
+    latitude: 27.1767,
+    longitude: 78.0081,
     zoom: 6,
   });
 
@@ -60,8 +58,8 @@ function Map() {
   };
 
   const handleLogout = () => {
-    storage.removeItem("userName");
-    setCurrentUser(null);
+    storage.removeItem("token");
+    setToken(null);
   };
 
   const displayPins = pins.map((p) => {
@@ -109,12 +107,13 @@ function Map() {
       onDblClick={(e) => handleDblClick(e)}
       transitionDuration="300ms"
     >
-      {!currentuserName ? (
+      {!token ? (
         <>
           <Button
             variant="contained"
             color="primary"
             cursor="pointer"
+            style={{ margin: "2px", "margin-right": "4px" }}
             onClick={() => setToggleRegister(!toggleRegister)}
           >
             Sign Up
@@ -123,6 +122,7 @@ function Map() {
             variant="contained"
             color="primary"
             cursor="pointer"
+            style={{ margin: "2px" }}
             onClick={() => setToggleLogin(!toggleLogin)}
           >
             Login
@@ -139,7 +139,7 @@ function Map() {
         </Button>
       )}
       {displayPins}
-      {newLocation ? (
+      {newLocation && token ? (
         <Popup
           latitude={newLocation.latitude}
           longitude={newLocation.longitude}
@@ -149,7 +149,6 @@ function Map() {
           onClose={() => setNewLocation(null)}
         >
           <PlaceForm
-            userName={currentuserName}
             latitude={newLocation.latitude}
             longitude={newLocation.longitude}
             afterSavingPin={afterSavingPin}
@@ -158,15 +157,17 @@ function Map() {
       ) : null}
       {toggleRegister ? (
         <RegisterForm
-          setCurrentUser={setCurrentUser}
+          setToken={setToken}
           setToggleRegister={setToggleRegister}
+          setToggleLogin={setToggleLogin}
           storage={storage}
         />
       ) : null}
       {toggleLogin ? (
         <LoginForm
-          setCurrentUser={setCurrentUser}
+          setToken={setToken}
           setToggleLogin={setToggleLogin}
+          setToggleRegister={setToggleRegister}
           storage={storage}
         />
       ) : null}

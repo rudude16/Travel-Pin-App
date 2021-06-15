@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const jwt = require("jsonwebtoken");
+const Pin = require("./pin");
 
 const userSchema = new mongoose.Schema(
   {
@@ -18,15 +20,26 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    friends: [
+    following: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
       },
     ],
+    tokens: [
+      {
+        token: { type: String, required: true },
+      },
+    ],
   },
   { timestamps: true }
 );
+
+userSchema.pre("remove", async function (next) {
+  const user = this;
+  await Pin.deleteMany({ userName: user.userName });
+  next();
+});
 
 const User = mongoose.model("User", userSchema);
 module.exports = User;

@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const PlaceForm = ({ userName, longitude, latitude, afterSavingPin }) => {
+const PlaceForm = ({ longitude, latitude, afterSavingPin }) => {
   const classes = useStyles();
 
   const [details, setDetails] = useState({
@@ -39,6 +39,7 @@ const PlaceForm = ({ userName, longitude, latitude, afterSavingPin }) => {
 
   const onFormSubmit = async (e) => {
     e.preventDefault();
+    const userName = window.localStorage.getItem("userName");
     const newPin = {
       userName,
       longitude,
