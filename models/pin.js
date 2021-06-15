@@ -8,12 +8,12 @@ const pinSchema = new mongoose.Schema(
       min: 2,
       max: 25,
     },
-    title: {
+    place: {
       type: String,
       required: true,
       max: 100,
     },
-    description: {
+    review: {
       type: String,
     },
 
@@ -26,7 +26,7 @@ const pinSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    langitude: {
+    longitude: {
       type: Number,
       required: true,
     },

@@ -14,7 +14,6 @@ router.post("/", async (req, res) => {
 });
 
 router.get("/", async (req, res) => {
-  res.header("Access-Control-Allow-Origin", "*");
   try {
     const pins = await Pin.find();
     res.status(200).json(pins);

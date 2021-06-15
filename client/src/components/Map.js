@@ -5,18 +5,24 @@ import RoomIcon from "@material-ui/icons/Room";
 import PopupCard from "./PopupCard";
 import axios from "axios";
 import PlaceForm from "./PlaceForm";
+import RegisterForm from "./RegisterForm";
+import LoginForm from "./LoginForm";
+import { Button } from "@material-ui/core";
 
 require("../app.css");
 
 function Map() {
-  const currentuserName = "random";
+  const storage = window.localStorage;
+  const [currentuserName, setCurrentUser] = useState(
+    storage.getItem("userName")
+  );
+  const [toggleRegister, setToggleRegister] = useState(false);
+  const [toggleLogin, setToggleLogin] = useState(false);
   const [currentPinId, setPinId] = React.useState(null);
   const [newLocation, setNewLocation] = React.useState(null);
   const [pins, setPins] = React.useState([]);
 
   const [viewport, setViewport] = useState({
-    width: "100vw",
-    height: "100vh",
     latitude: 37.7577,
     longitude: -122.4376,
     zoom: 6,
@@ -28,7 +34,6 @@ function Map() {
         const pins = await axios.get(
           `${process.env.REACT_APP_BACKEND}/api/pins`
         );
-        console.log(pins);
         setPins(pins.data);
       } catch (e) {
         console.log(e);
@@ -52,6 +57,11 @@ function Map() {
       latitude: lngLat[1],
       longitude: lngLat[0],
     });
+  };
+
+  const handleLogout = () => {
+    storage.removeItem("userName");
+    setCurrentUser(null);
   };
 
   const displayPins = pins.map((p) => {
@@ -91,12 +101,43 @@ function Map() {
   return (
     <ReactMapGL
       {...viewport}
+      width="100vw"
+      height="100vh"
       mapboxApiAccessToken={process.env.REACT_APP_MAPBOXID}
       mapStyle="mapbox://styles/mapbox/dark-v10"
       onViewportChange={(nextViewport) => setViewport(nextViewport)}
       onDblClick={(e) => handleDblClick(e)}
-      transitionDuration="200ms"
+      transitionDuration="300ms"
     >
+      {!currentuserName ? (
+        <>
+          <Button
+            variant="contained"
+            color="primary"
+            cursor="pointer"
+            onClick={() => setToggleRegister(!toggleRegister)}
+          >
+            Sign Up
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            cursor="pointer"
+            onClick={() => setToggleLogin(!toggleLogin)}
+          >
+            Login
+          </Button>
+        </>
+      ) : (
+        <Button
+          variant="contained"
+          color="primary"
+          cursor="pointer"
+          onClick={() => handleLogout()}
+        >
+          Logout
+        </Button>
+      )}
       {displayPins}
       {newLocation ? (
         <Popup
@@ -114,6 +155,20 @@ function Map() {
             afterSavingPin={afterSavingPin}
           />
         </Popup>
+      ) : null}
+      {toggleRegister ? (
+        <RegisterForm
+          setCurrentUser={setCurrentUser}
+          setToggleRegister={setToggleRegister}
+          storage={storage}
+        />
+      ) : null}
+      {toggleLogin ? (
+        <LoginForm
+          setCurrentUser={setCurrentUser}
+          setToggleLogin={setToggleLogin}
+          storage={storage}
+        />
       ) : null}
     </ReactMapGL>
   );

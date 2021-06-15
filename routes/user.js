@@ -34,4 +34,11 @@ router.post("/login", async (req, res) => {
   }
 });
 
+router.patch("/", async (req, res) => {
+  try {
+  } catch (e) {
+    res.send(500).json(e);
+  }
+});
+
 module.exports = router;

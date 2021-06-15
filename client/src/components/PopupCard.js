@@ -7,6 +7,9 @@ import Typography from "@material-ui/core/Typography";
 import { format } from "timeago.js";
 
 const PopupCard = ({ pin }) => {
+  const showStar = [];
+  for (let i = 0; i < pin.rating; ++i)
+    showStar.push(<StarRateIcon className="star" />);
   return (
     <Card>
       <CardActionArea>
@@ -42,12 +45,7 @@ const PopupCard = ({ pin }) => {
             Rating
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">
-            <StarRateIcon className="star" />
-            <StarRateIcon className="star" />
-            <StarRateIcon className="star" />
-            <StarRateIcon className="star" />
-            <StarRateIcon className="star" />
-            {pin.rating}
+            {showStar}
           </Typography>
           <Typography
             gutterBottom

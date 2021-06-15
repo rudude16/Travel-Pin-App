@@ -47,7 +47,6 @@ const PlaceForm = ({ userName, longitude, latitude, afterSavingPin }) => {
       review: details.review,
       rating: details.rating,
     };
-    console.log(newPin);
     try {
       const pin = await axios.post(
         `${process.env.REACT_APP_BACKEND}/api/pins`,
@@ -55,6 +54,7 @@ const PlaceForm = ({ userName, longitude, latitude, afterSavingPin }) => {
       );
       afterSavingPin(pin);
     } catch (e) {
+      alert("Something went wrong!");
       console.log(e);
     }
   };
