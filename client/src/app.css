@@ -7,3 +7,21 @@
 .star {
   color: gold;
 }
+
+.delete {
+  margin: 0px;
+  top: auto;
+  right: 20px;
+  bottom: 20px;
+  left: auto;
+  position: fixed;
+}
+
+.edit {
+  margin: 0px;
+  top: auto;
+  right: 20px;
+  bottom: 20px;
+  right: auto;
+  position: fixed;
+}

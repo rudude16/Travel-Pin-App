@@ -64,7 +64,7 @@ function Map() {
 
   const displayPins = pins.map((p) => {
     return (
-      <>
+      <React.Fragment key={p._id}>
         <Marker
           latitude={p.latitude}
           longitude={p.longitude}
@@ -89,10 +89,15 @@ function Map() {
             anchor="top"
             onClose={() => setPinId(null)}
           >
-            <PopupCard pin={p} />
+            <PopupCard
+              pin={p}
+              afterSavingPin={afterSavingPin}
+              pins={pins}
+              setPins={setPins}
+            />
           </Popup>
         ) : null}
-      </>
+      </React.Fragment>
     );
   });
 
