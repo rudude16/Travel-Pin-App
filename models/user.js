@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const jwt = require("jsonwebtoken");
 const Pin = require("./pin");
 
 const userSchema = new mongoose.Schema(
@@ -22,8 +21,7 @@ const userSchema = new mongoose.Schema(
     },
     following: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        followingUser: { type: String },
       },
     ],
     tokens: [

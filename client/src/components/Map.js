@@ -23,22 +23,30 @@ function Map() {
   const [viewport, setViewport] = useState({
     latitude: 27.1767,
     longitude: 78.0081,
-    zoom: 6,
+    zoom: 3,
   });
 
   useEffect(() => {
-    const fetchPins = async () => {
-      try {
-        const pins = await axios.get(
-          `${process.env.REACT_APP_BACKEND}/api/pins`
-        );
-        setPins(pins.data);
-      } catch (e) {
-        console.log(e);
-      }
-    };
-    fetchPins();
-  }, []);
+    if (token) {
+      const fetchPins = async () => {
+        try {
+          const options = {
+            headers: {
+              authorization: `Bearer ${window.localStorage.getItem("token")}`,
+            },
+          };
+          const pins = await axios.get(
+            `${process.env.REACT_APP_BACKEND}/api/pins`,
+            options
+          );
+          setPins(pins.data);
+        } catch (e) {
+          console.log(e);
+        }
+      };
+      fetchPins();
+    } else setPins([]);
+  }, [token]);
 
   const afterSavingPin = (pin) => {
     setPins([...pins, pin.data]);
@@ -68,8 +76,8 @@ function Map() {
         <Marker
           latitude={p.latitude}
           longitude={p.longitude}
-          offsetLeft={-20}
-          offsetTop={-10}
+          offsetLeft={-3.4 * viewport.zoom}
+          offsetTop={-6 * viewport.zoom}
         >
           <RoomIcon
             onClick={(e) => handleMarkerClick(p._id, p.latitude, p.longitude)}
