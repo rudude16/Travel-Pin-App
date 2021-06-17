@@ -48,8 +48,13 @@ export default function RegisterForm({
     password: "",
   });
 
+  const [success, toggleSuccess] = useState(false);
+  const [sucessText, setSuccessText] = useState("");
+
   const handleInputChange = (e) => {
     setDetails({ ...details, [e.name]: e.value });
+    toggleSuccess(false);
+    setSuccessText("");
   };
 
   const handleFormSubmit = async (e) => {
@@ -64,8 +69,10 @@ export default function RegisterForm({
       setToken(user.data.token);
       setToggleLogin(false);
     } catch (e) {
-      alert("Something went wrong!");
-      console.log(e);
+      if (e.response.data.message === "password") {
+        toggleSuccess(true);
+        setSuccessText("Wrong Username or Password");
+      } else alert("Something Went wrong!");
     }
   };
 
@@ -79,7 +86,7 @@ export default function RegisterForm({
       <div className={classes.paper}>
         <Grid container justify="flex-end">
           <Grid item>
-            <Cancel onClick={() => handleOnClick()} fontSize="medium" />
+            <Cancel onClick={() => handleOnClick()} />
           </Grid>
         </Grid>
         <Typography component="h1" variant="h5">
@@ -93,6 +100,7 @@ export default function RegisterForm({
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
+                error={success}
                 autoComplete="uname"
                 name="userName"
                 variant="outlined"
@@ -102,10 +110,12 @@ export default function RegisterForm({
                 label="User Name"
                 autoFocus
                 onChange={(e) => handleInputChange(e.target)}
+                helperText={sucessText}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
+                error={success}
                 variant="outlined"
                 required
                 fullWidth
@@ -115,6 +125,7 @@ export default function RegisterForm({
                 id="password"
                 autoComplete="current-password"
                 onChange={(e) => handleInputChange(e.target)}
+                helperText={sucessText}
               />
             </Grid>
           </Grid>

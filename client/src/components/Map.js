@@ -8,6 +8,7 @@ import PlaceForm from "./PlaceForm";
 import RegisterForm from "./RegisterForm";
 import LoginForm from "./LoginForm";
 import { Button } from "@material-ui/core";
+import LoginButtons from "../components/LoginButtons";
 
 require("../app.css");
 
@@ -40,9 +41,7 @@ function Map() {
             options
           );
           setPins(pins.data);
-        } catch (e) {
-          console.log(e);
-        }
+        } catch (e) {}
       };
       fetchPins();
     } else setPins([]);
@@ -65,14 +64,9 @@ function Map() {
     });
   };
 
-  const handleLogout = () => {
-    storage.removeItem("token");
-    setToken(null);
-  };
-
-  const displayPins = pins.map((p) => {
+  const displayPins = pins.map((p, i) => {
     return (
-      <React.Fragment key={p._id}>
+      <React.Fragment key={p._id + i}>
         <Marker
           latitude={p.latitude}
           longitude={p.longitude}
@@ -83,7 +77,10 @@ function Map() {
             onClick={(e) => handleMarkerClick(p._id, p.latitude, p.longitude)}
             style={{
               fontSize: viewport.zoom * 6,
-              color: "blue",
+              color:
+                p.userName === storage.getItem("userName")
+                  ? "blue"
+                  : "orangered",
               cursor: "pointer",
             }}
           />
@@ -121,35 +118,27 @@ function Map() {
       transitionDuration="300ms"
     >
       {!token ? (
-        <>
+        <div className="buttons">
           <Button
             variant="contained"
             color="primary"
             cursor="pointer"
-            style={{ margin: "2px", "margin-right": "4px" }}
             onClick={() => setToggleRegister(!toggleRegister)}
           >
             Sign Up
           </Button>
           <Button
+            className="login"
             variant="contained"
-            color="primary"
             cursor="pointer"
-            style={{ margin: "2px" }}
+            style={{ margin: "3px", backgroundColor: "orchid" }}
             onClick={() => setToggleLogin(!toggleLogin)}
           >
             Login
           </Button>
-        </>
+        </div>
       ) : (
-        <Button
-          variant="contained"
-          color="primary"
-          cursor="pointer"
-          onClick={() => handleLogout()}
-        >
-          Logout
-        </Button>
+        <LoginButtons setToken={setToken} storage={storage} />
       )}
       {displayPins}
       {newLocation && token ? (

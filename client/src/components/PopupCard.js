@@ -30,9 +30,7 @@ const PopupCard = ({ pin, pins, setPins }) => {
       togglePopupCard(true);
       let filteredArray = pins.filter((p) => p._id !== pin._id);
       setPins(filteredArray);
-    } catch (e) {
-      console.log(e);
-    }
+    } catch (e) {}
   };
 
   const showStar = [];
@@ -43,7 +41,7 @@ const PopupCard = ({ pin, pins, setPins }) => {
     <>
       <Card>
         <CardActionArea>
-          <CardContent>
+          <CardContent className="popup">
             <Typography
               gutterBottom
               variant="h6"

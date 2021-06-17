@@ -56,7 +56,6 @@ const PlaceForm = ({ longitude, latitude, afterSavingPin }) => {
       afterSavingPin(pin);
     } catch (e) {
       alert("Something went wrong!");
-      console.log(e);
     }
   };
 

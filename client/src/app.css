@@ -25,3 +25,18 @@
   right: auto;
   position: fixed;
 }
+
+.popup {
+  background-color: whitesmoke;
+}
+
+.buttons {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-right: 3px;
+}
+
+.following {
+  background-color: powderblue;
+}

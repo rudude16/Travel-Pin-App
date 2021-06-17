@@ -9,6 +9,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Cancel from "@material-ui/icons/Cancel";
 import axios from "axios";
+import validator from "validator";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -30,8 +31,6 @@ const useStyles = makeStyles((theme) => ({
     position: "absolute",
     top: "5px",
     right: "5px",
-    backgroundColor: "lightgray",
-    color: "gray",
     cursor: "pointer",
   },
 }));
@@ -43,6 +42,12 @@ export default function RegisterForm({
   storage,
 }) {
   const classes = useStyles();
+  const [userNameError, toggleUserNameError] = useState(false);
+  const [userNameErrorText, setUserNameErrorText] = useState("");
+  const [emailError, toggleEmailError] = useState(false);
+  const [emailErrorText, setEmailErrorText] = useState("");
+  const [passwordError, togglePasswordError] = useState(false);
+  const [passwordErrorText, setPasswordErrorText] = useState("");
   const [details, setDetails] = useState({
     userName: "",
     email: "",
@@ -50,11 +55,43 @@ export default function RegisterForm({
   });
 
   const handleInputChange = (e) => {
+    if (e.name === "userName") {
+      if (e.value.length < 3) {
+        toggleUserNameError(true);
+        setUserNameErrorText("Username must be greater than 3 characters");
+      } else if (e.value.length > 25) {
+        toggleUserNameError(true);
+        setUserNameErrorText("Username must be less than 25 characters");
+      } else {
+        toggleUserNameError(false);
+        setUserNameErrorText("");
+      }
+    } else if (e.name === "email") {
+      if (!validator.isEmail(e.value)) {
+        toggleEmailError(true);
+        setEmailErrorText("Invalid Email");
+      } else {
+        toggleEmailError(false);
+        setEmailErrorText("");
+      }
+    } else {
+      if (e.value.length < 6) {
+        togglePasswordError(true);
+        setPasswordErrorText("Password must be at least 6 digits long");
+      } else {
+        togglePasswordError(false);
+        setPasswordErrorText("");
+      }
+    }
     setDetails({ ...details, [e.name]: e.value });
   };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+    if (emailError || passwordError || userNameError) {
+      alert("Invalid Entries");
+      return;
+    }
     try {
       const user = await axios.post(
         `${process.env.REACT_APP_BACKEND}/api/user/signup`,
@@ -65,8 +102,14 @@ export default function RegisterForm({
       setToken(user.data.token);
       setToggleRegister(false);
     } catch (e) {
-      alert("Something went wrong!");
-      console.log(e);
+      if (e.response.data.message.email) {
+        toggleEmailError(true);
+        setEmailErrorText("Email already exists!");
+      }
+      if (e.response.data.message.userName) {
+        toggleUserNameError(true);
+        setUserNameErrorText("User Name Already Taken!");
+      } else alert("Something Went Wrong!");
     }
   };
 
@@ -80,7 +123,7 @@ export default function RegisterForm({
       <div className={classes.paper}>
         <Grid container justify="flex-end">
           <Grid item>
-            <Cancel onClick={() => handleOnClick()} fontSize="medium" />
+            <Cancel onClick={() => handleOnClick()} />
           </Grid>
         </Grid>
         <Typography component="h1" variant="h5">
@@ -94,19 +137,21 @@ export default function RegisterForm({
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
-                autoComplete="uname"
+                error={userNameError}
                 name="userName"
                 variant="outlined"
                 required
                 fullWidth
                 id="userName"
                 label="User Name"
+                helperText={userNameErrorText}
                 autoFocus
                 onChange={(e) => handleInputChange(e.target)}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
+                error={emailError}
                 variant="outlined"
                 required
                 fullWidth
@@ -115,10 +160,12 @@ export default function RegisterForm({
                 name="email"
                 autoComplete="email"
                 onChange={(e) => handleInputChange(e.target)}
+                helperText={emailErrorText}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
+                error={passwordError}
                 variant="outlined"
                 required
                 fullWidth
@@ -128,6 +175,7 @@ export default function RegisterForm({
                 id="password"
                 autoComplete="current-password"
                 onChange={(e) => handleInputChange(e.target)}
+                helperText={passwordErrorText}
               />
             </Grid>
           </Grid>

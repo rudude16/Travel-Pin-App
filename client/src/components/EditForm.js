@@ -61,7 +61,6 @@ const EditForm = ({ pin, togglePopupCard, pins, setPins }) => {
       setPins([...filteredArray, updatedPin.data]);
     } catch (e) {
       alert("Something went wrong!");
-      console.log(e);
     }
   };
 
